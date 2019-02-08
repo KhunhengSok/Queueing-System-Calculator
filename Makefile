@@ -1,11 +1,14 @@
-all: main.o Model.o
-	cls && g++ main.o Model.o -o app && make clear && app 
+all: main.o Queue.o SingleQueue.o
+	cls && g++ main.o Queue.o SingleQueue.o -o app && make clear && app 
 
 main.o: main.cpp
 	g++ main.cpp -c 
 
-Model.o: Model.h	Model.cpp	
-	g++ Model.h Model.cpp -c 
+Queue.o: Queue.h	Queue.cpp	
+	g++ Queue.h Queue.cpp -c 
+
+SingleQueue.o: SingleQueue.h SingleQueue.cpp	
+	g++ SingleQueue.h SingleQueue.cpp -c 
 
 clear:
 	del *.o
