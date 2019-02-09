@@ -1,13 +1,18 @@
 #include "SingleQueue.h"
 #include <math.h>
+#include <iostream>
+#include <limits>
 
 float SingleQueue::meanWaitingTime(){
-    float waitingTime = this->meanQueueLength() * this->queue->getOccupationRate();
+    float waitingTime = this->meanQueueLength() / this->queue->getArrivalRate();
     return waitingTime ;
 }
 
 float SingleQueue::meanQueueLength(){
-    float length = this->queue->getOccupationRate() / (1 - this->queue->getOccupationRate());
+    if(this->getOccupateRate() >= 1 ){
+        return std::numeric_limits<float>::infinity();
+    }
+    float length =( this->queue->getOccupationRate() * this->queue->getOccupationRate()) / (1 - this->queue->getOccupationRate());
     return length; 
 }
 
@@ -25,9 +30,6 @@ float SingleQueue::probability_queueLongerThan(int length){
     return 1 - probab ;
 }
 
-
-
-
-float SingleQueue::probability_waitLongerThan(long time){
-    return ( this->queue->getOccupationRate() * exp(-  this->queue->getOccupationRate()* time *  (1-this->queue->getOccupationRate() )) ) ;
+float SingleQueue::probability_waitLongerThan(float time){
+    return ( this->queue->getOccupationRate() * exp(-1 *   this->queue->getServiceRate()* time *  ( 1-this->queue->getOccupationRate() )) ) ;
 }

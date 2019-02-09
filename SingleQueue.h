@@ -41,7 +41,7 @@ class SingleQueue{
         float meanWaitingTime(); //E(W): waiting time in queue
 
         float getMeanQueueLength();
-        float probability_waitLongerThan(long time);
+        float probability_waitLongerThan(float  time);
         float probability_queueLongerThan(int length);
 
 

@@ -21,7 +21,8 @@ void printResult(Queue *queue){
     cout << "Average Arrival Rate per mn: " << queue->arrivalRate << endl ; 
     cout << "Average Interarrival time(mn): " << 1/queue->arrivalRate << endl;
     cout << "Average Service Rate per mn: " << queue->serviceRate << endl;
-    cout << "Average Service time(mn): " << 1/queue->serviceRate << endl << endl ;
+    cout << "Average Service time(mn): " << 1/queue->serviceRate << endl ;
+    cout << "Service Utilization: " << queue->arrivalRate / (queue->serviceRate * queue->num_server) << endl << endl  ; 
 }
 
 void printTable(Queue *inputQueue){
@@ -29,13 +30,16 @@ void printTable(Queue *inputQueue){
     SingleQueue *queue = new SingleQueue(inputQueue);
     short num_server = inputQueue->num_server;
     float waitingOption[3] = {};
-    float lengthOption[3] = {};
+    int lengthOption[3] = {};
+    float length = ceil( queue->meanQueueLength());
+
     for(short i =0 ; i < 3 ; i++){
         float wait = queue->meanWaitingTime();
-        float length = queue->meanQueueLength();
-        waitingOption[i] = wait * (i*2 +1 ); //1,3,5
-        lengthOption[i] = length * (i*2 +1 ); //1,3,5
+        waitingOption[i] = wait * (i + 1); //1,2,3
+        lengthOption[i] = ceil(length * ( ((i  * 0.1 ) + 1 ))); 
+        length = lengthOption[i];
     }
+    
     delete queue;
     float waiting = 0 ; 
     short queueLength = 0 ; 
@@ -48,11 +52,12 @@ void printTable(Queue *inputQueue){
     for(char i = 0 ; i < 3 ; i++){
         cout << setfill(' ') << setw(11) << waitingOption[i];
     }
-    cout << setfill(' ') << setw(8) <<"";
+    cout << setfill(' ') << setw(10) <<"";
     for(char i = 0 ; i < 3 ; i++){
-        cout << setfill(' ') << setw(11) << lengthOption[i];
+        cout << setfill(' ') << setw(8) << lengthOption[i];
     }
     //end print table
+
     cout << endl ;
     for(short i = num_server - 2 ; i<= num_server + 2  ; i ++ ){
         if(i <= 0 ) continue ;
@@ -65,7 +70,7 @@ void printTable(Queue *inputQueue){
         cout << setfill(' ') << setw(10) << "" ;
         
         for(char i = 0 ;  i< 3 ; i++){
-            cout << setfill(' ') << setw(11) << queue->probability_queueLongerThan(waitingOption[i]) ;
+            cout << setfill(' ') << setw(11) << queue->probability_waitLongerThan(waitingOption[i]) ;
         }
         cout << setfill(' ') << setw(8) << "" ;
 
@@ -74,11 +79,8 @@ void printTable(Queue *inputQueue){
         }
         
         cout  << endl;
-    
+        delete queue;
     }
-
-
-
 }
 
 void printTableColumn(){
@@ -98,7 +100,7 @@ Queue* getInfo(){
     using namespace std; 
     Queue *queue = new Queue();
     float input = 0 ;
-    cout << setfill(' ') << setw(75) << " Single Queue - Single Server " << endl;
+    cout << setfill(' ') << setw(75) << " Single-Server Queues " << endl;
     cout << endl << "Time Unit: minute(mn)" << endl ;
 
     cout << "Average Arrival Rate: " ;
@@ -134,5 +136,9 @@ Queue* getInfo(){
 
     }
     /*end input service rate */
+
+    cout << endl <<endl;
     return queue;
+
+
 }
