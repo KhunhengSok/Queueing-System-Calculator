@@ -2,14 +2,98 @@
 #include <iomanip>
 #include <cmath>
 
+#include "SingleQueue.h"
 #include "Queue.h"
 
 Queue* getInfo();
+void printResult(Queue *queue);
+void printTable(Queue *inputQueue);
+void printTableColumn();
 
 int main(){
-    getInfo();
+    Queue *inputQueue = getInfo();
+    printResult(inputQueue);
+    printTable(inputQueue);
 }
 
+void printResult(Queue *queue){
+    using namespace std; 
+    cout << "Average Arrival Rate per mn: " << queue->arrivalRate << endl ; 
+    cout << "Average Interarrival time(mn): " << 1/queue->arrivalRate << endl;
+    cout << "Average Service Rate per mn: " << queue->serviceRate << endl;
+    cout << "Average Service time(mn): " << 1/queue->serviceRate << endl << endl ;
+}
+
+void printTable(Queue *inputQueue){
+    using namespace std; 
+    SingleQueue *queue = new SingleQueue(inputQueue);
+    short num_server = inputQueue->num_server;
+    float waitingOption[3] = {};
+    float lengthOption[3] = {};
+    for(short i =0 ; i < 3 ; i++){
+        float wait = queue->meanWaitingTime();
+        float length = queue->meanQueueLength();
+        waitingOption[i] = wait * (i*2 +1 ); //1,3,5
+        lengthOption[i] = length * (i*2 +1 ); //1,3,5
+    }
+    delete queue;
+    float waiting = 0 ; 
+    short queueLength = 0 ; 
+    float prob_wait = 0 ;
+    float prob_length = 0 ; 
+
+    //Start Print table
+    printTableColumn();
+    cout << setfill(' ') << setw(4) <<"";
+    for(char i = 0 ; i < 3 ; i++){
+        cout << setfill(' ') << setw(11) << waitingOption[i];
+    }
+    cout << setfill(' ') << setw(8) <<"";
+    for(char i = 0 ; i < 3 ; i++){
+        cout << setfill(' ') << setw(11) << lengthOption[i];
+    }
+    //end print table
+    cout << endl ;
+    for(short i = num_server - 2 ; i<= num_server + 2  ; i ++ ){
+        if(i <= 0 ) continue ;
+        queue = new SingleQueue(inputQueue->arrivalRate,inputQueue->serviceRate, i);
+        
+        
+        cout << endl<< setfill(' ') << setw(8) << i ;
+        cout << setfill(' ') << setw(28) << queue->meanWaitingTime() ;
+        cout << setfill(' ') << setw(22) << queue->meanQueueLength() ;
+        cout << setfill(' ') << setw(10) << "" ;
+        
+        for(char i = 0 ;  i< 3 ; i++){
+            cout << setfill(' ') << setw(11) << queue->probability_queueLongerThan(waitingOption[i]) ;
+        }
+        cout << setfill(' ') << setw(8) << "" ;
+
+        for(char i = 0 ;  i< 3 ; i++){
+            cout << setfill(' ') << setw(11) << queue->probability_queueLongerThan(lengthOption[i]) ;
+        }
+        
+        cout  << endl;
+    
+    }
+
+
+
+}
+
+void printTableColumn(){
+    using namespace std;
+
+    cout << setfill(' ') << setw(100) << "Probability of Waiting Time" ;
+    cout << setfill(' ') << setw(40) << "Probability of Queue Length" ;
+    cout << endl ;
+    cout << setfill(' ') << setw(90) << "Longer Than" ;
+    cout << setfill(' ') << setw(40) << "Longer Than" ;
+    cout << endl ;
+    cout << setfill(' ') << setw(15) << "Amount of Server" ;
+    cout << setfill(' ') << setw(25) << "Average Waiting time" ;
+    cout << setfill(' ') << setw(25) << "Average Queue Length" ;
+}
 Queue* getInfo(){
     using namespace std; 
     Queue *queue = new Queue();
@@ -43,7 +127,7 @@ Queue* getInfo(){
     try{
         cin >> input ; 
         if(input <=0 || input != floor(input) ) throw "Invalid Argument.\n";
-        queue->serviceRate = input ;
+        queue->num_server = input ;
     }catch(const char *e ){
         cout << e;
         exit(1);

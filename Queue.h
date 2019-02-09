@@ -1,6 +1,9 @@
 /*
     Time Unit : minute(mn)
 */
+#ifndef _QUEUE_H
+#define _QUEUE_H
+
 #include <iostream>
 
 struct Queue{
@@ -29,3 +32,5 @@ struct Queue{
         }
 
 };
+
+#endif //QUEUE_H

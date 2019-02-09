@@ -1,5 +1,5 @@
 all: main.o Queue.o SingleQueue.o
-	cls && g++ main.o Queue.o SingleQueue.o -o app && make clear && app 
+	g++ main.o Queue.o SingleQueue.o -o app && make clear  && app 
 
 main.o: main.cpp
 	g++ main.cpp -c 

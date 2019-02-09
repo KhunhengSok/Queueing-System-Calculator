@@ -1,3 +1,6 @@
+#ifndef SINGLEQUEUE_H
+#define SINGLEQUEUE_H
+
 #include "Queue.h"
 
 class SingleQueue{
@@ -7,29 +10,42 @@ class SingleQueue{
         Queue *queue = nullptr  ;
 
         // float meanSojournTime();  //E(S): sojourn time = waiting time + service time
-        float meanWaitingTime(); //E(W): waiting time in queue
+        
         // float meanServiceTime(); // E(B): service time
 
         // float meanNumberOfCustomer(); // E(L): number of customer in the server
-        float meanQueueLength(); // E(Lq) : number of customer in the queue
+        
         double probability_queueEqual(int length);
 
         double power(float base, int n);
 
 
     public:
+        float getServerNum(){return queue->num_server;}
+        float getArrivalRate(){return queue->getArrivalRate();}
+        float getServiceRate(){return queue->getServiceRate();}
+        float getOccupateRate(){return queue->getOccupationRate();}
+
         SingleQueue(float arrivalRate, float serviceRate, short num_server){
             queue = new Queue(arrivalRate, serviceRate,num_server);
             this->meanWait = this->meanWaitingTime();
             this->meanQueue = this->meanQueueLength();
 
         }
+        SingleQueue(Queue *queue):SingleQueue(queue->arrivalRate,queue->serviceRate,queue->num_server){}
+
         ~SingleQueue(){
             delete queue;
         }
 
+        float meanQueueLength(); // E(Lq) : number of customer in the queuefloat getMeanWait(){return this->meanWait};
+        float meanWaitingTime(); //E(W): waiting time in queue
+
+        float getMeanQueueLength();
         float probability_waitLongerThan(long time);
         float probability_queueLongerThan(int length);
 
 
 };
+
+#endif //SINGLEQUEUE_H
