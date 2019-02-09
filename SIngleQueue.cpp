@@ -13,7 +13,7 @@ float SingleQueue::meanQueueLength(){
 
 double SingleQueue::probability_queueEqual(int length){
     if( length == 0 ) return(1 - this->queue->getOccupationRate()); 
-    return ( ( 1- this->queue->getOccupationRate() ) * power(this->queue->getOccupationRate(), length) );
+    return ( ( 1- this->queue->getOccupationRate() ) * std::pow(this->queue->getOccupationRate(), length) );
 }
 
 float SingleQueue::probability_queueLongerThan(int length){
@@ -25,17 +25,7 @@ float SingleQueue::probability_queueLongerThan(int length){
     return 1 - probab ;
 }
 
-double SingleQueue::power(float base, int n){
-    if(n == 0 ) return 1 ;
-    double result = base  ; 
-    
-    for(char i = 2; i <= n ; i++ ){
-        result *= result ; 
-    }
 
-    if ( n < 0 ) return 1/result ;
-    else return result ; 
-}
 
 
 float SingleQueue::probability_waitLongerThan(long time){

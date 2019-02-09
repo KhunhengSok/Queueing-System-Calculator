@@ -17,7 +17,6 @@ class SingleQueue{
         
         double probability_queueEqual(int length);
 
-        double power(float base, int n);
 
 
     public:
